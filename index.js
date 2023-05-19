@@ -36,6 +36,13 @@ async function run() {
         const toys =await ToyCollection.find({}).toArray();
         res.send(toys)
     })
+    app.get('/alltoy/:text',async(req,res)=>{
+        const category = req.params.text;
+        const toys = await ToyCollection.find(
+            { subcategory : category}
+        ).toArray()
+        res.send(toys)
+    })
 
   } finally {
     // Ensures that the client will close when you finish/error
