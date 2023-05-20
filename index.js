@@ -9,7 +9,7 @@ app.use(express.json())
 app.use(cors())
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.df1ioxo.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -50,6 +50,28 @@ async function run() {
         ).toArray()
         res.send(toys)
     })
+    app.get('/viewtoys/:id',async(req,res)=>{
+        const id = req.params.id;
+        const toy = await ToyCollection.find( {_id : new ObjectId(id)}).toArray()
+        res.send(toy)
+    })
+
+    app.put("/updatetoy/:id", async (req, res) => {
+      const id = req.params.id;
+      const body = req.body;
+      //console.log(body);
+      const filter = { _id: new ObjectId(id) };
+      const updateDoc = {
+        $set: {
+          price: body.price,
+          quantity: body.quantity,
+          description: body.description,
+        },
+      };
+      const result = await ToyCollection.updateOne(filter, updateDoc);
+      console.log(result)
+      res.send(result);
+    });
 
   } finally {
     // Ensures that the client will close when you finish/error
