@@ -80,6 +80,12 @@ async function run() {
       res.send(result)
     })
 
+    app.post('/addtoy',async(req,res)=>{
+      const body = req.body;
+      const result = await ToyCollection.insertOne(body)
+      res.send(result)
+    })
+
   } finally {
     // Ensures that the client will close when you finish/error
     //await client.close();
