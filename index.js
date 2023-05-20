@@ -32,8 +32,14 @@ async function run() {
 
     const ToyCollection = client.db('ToyCollection').collection('ToyDb')
 
-    app.get('/alltoy',async(req,res)=>{
-        const toys =await ToyCollection.find({}).toArray();
+    app.get('/alltoys',async(req,res)=>{
+        const limit = parseInt(req.query.limit)
+        const search = req.query.search
+        console.log(limit,search)
+        const toys =await ToyCollection.find({
+          name: {$regex: search, $options: "i"} 
+        }).limit(limit).toArray();
+       // console.log(toys);
         res.send(toys)
     })
     app.get('/alltoy/:text',async(req,res)=>{
@@ -43,10 +49,15 @@ async function run() {
         ).toArray()
         res.send(toys)
     })
-    app.get('/mytoys/:text',async(req,res)=>{
-        const email = req.params.text;
+    app.get('/mytoys',async(req,res)=>{
+        const email = req.query.email;
+        const sortvalue = parseInt(req.query.sort);
+        console.log(email,sortvalue) 
+        const options = {
+          sort: {price : sortvalue}
+        }
         const toys = await ToyCollection.find(
-            { email : email}
+          {email: email},options
         ).toArray()
         res.send(toys)
     })
