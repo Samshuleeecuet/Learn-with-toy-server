@@ -35,7 +35,7 @@ async function run() {
     app.get('/alltoys',async(req,res)=>{
         const limit = parseInt(req.query.limit)
         const search = req.query.search
-        console.log(limit,search)
+        //console.log(limit,search)
         const toys =await ToyCollection.find({
           name: {$regex: search, $options: "i"} 
         }).limit(limit).toArray();
